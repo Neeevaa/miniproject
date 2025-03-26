@@ -1,0 +1,125 @@
+/* 3D Progress Bar Styles */
+.chart {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+    perspective: 1000px;
+}
+
+.bar {
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotate 5s infinite linear;
+    width: 50px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(254, 161, 22, 0.1);
+}
+
+.face.top {
+    transform: rotateX(90deg) translateZ(25px);
+}
+
+.face.side-0 {
+    transform: translateZ(25px);
+}
+
+.face.side-1 {
+    transform: rotateY(90deg) translateZ(25px);
+}
+
+.face.side-a {
+    transform: rotateY(-90deg) translateZ(25px);
+}
+
+.face.side-b {
+    transform: rotateY(180deg) translateZ(25px);
+}
+
+.face.floor {
+    transform: rotateX(-90deg) translateZ(25px);
+}
+
+.growing-bar {
+    transform-origin: center bottom;
+    transition: all 0.8s ease-in-out;
+    background-color: rgba(254, 161, 22, 0.8);
+    width: 100%;
+    height: 100%;
+}
+
+/* Progress states */
+.bar.progress-25 .growing-bar {
+    transform: scaleY(0.25);
+}
+
+.bar.progress-50 .growing-bar {
+    transform: scaleY(0.50);
+}
+
+.bar.progress-75 .growing-bar {
+    transform: scaleY(0.75);
+}
+
+.bar.progress-100 .growing-bar {
+    transform: scaleY(1);
+}
+
+@keyframes rotate {
+    from { transform: rotateY(0); }
+    to { transform: rotateY(360deg); }
+}
+
+/* Status specific colors */
+.status-Pending .growing-bar {
+    background-color: rgba(255, 193, 7, 0.8);
+}
+
+.status-In-Progress .growing-bar {
+    background-color: rgba(13, 110, 253, 0.8);
+}
+
+.status-Completed .growing-bar {
+    background-color: rgba(25, 135, 84, 0.8);
+}
+
+.status-Delivered .growing-bar {
+    background-color: rgba(25, 135, 84, 0.8);
+}
+
+.status-Cancelled .growing-bar {
+    background-color: rgba(220, 53, 69, 0.8);
+}
+
+/* Progress container styles */
+.progress-container {
+    margin: 40px auto;
+    position: relative;
+    max-width: 600px;
+    text-align: center;
+}
+
+.progress-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding: 0 20px;
+}
+
+.progress-label {
+    font-size: 0.9em;
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+.progress-label.active {
+    color: #fea116;
+    font-weight: bold;
+}

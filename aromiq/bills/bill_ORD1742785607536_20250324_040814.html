@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Your Aromiq Bill</title>
+        <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; }
+            .bill-container { max-width: 800px; margin: 0 auto; padding: 20px; }
+            .restaurant-name { font-size: 24px; font-weight: bold; color: #fea116; }
+            .bill-header { text-align: center; margin-bottom: 20px; }
+            .bill-info { display: flex; justify-content: space-between; margin-bottom: 20px; }
+            .info-group { flex: 1; }
+            .info-label { font-weight: bold; }
+            .bill-items { margin-bottom: 20px; }
+            .item-header { font-weight: bold; border-bottom: 1px solid #ddd; margin-bottom: 10px; }
+            .item-row { display: flex; margin-bottom: 8px; }
+            .item-row > div { flex: 1; padding: 5px; }
+            .bill-total { margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px; }
+            .grand-total { font-weight: bold; font-size: 18px; }
+        </style>
+    </head>
+    <body>
+        <div class="bill-container">
+            <div class="bill-header">
+                <div class="restaurant-name">Aromiq</div>
+                <p>123 Restaurant Street, Foodie City</p>
+                <p>Tel: +91 9895316120</p>
+                <p>GSTIN: 22AAAAA0000A1Z5</p>
+            </div>
+            
+            <div class="bill-info">
+                <div class="info-group">
+                    <div><span class="info-label">Bill No:</span> ORD1742785607536</div>
+                    <div><span class="info-label">Date:</span> 24-03-2025</div>
+                    <div><span class="info-label">Time:</span> 04:08</div>
+                </div>
+                <div class="info-group">
+                    <div><span class="info-label">Customer:</span> </div>
+                    <div><span class="info-label">Email:</span> </div>
+                    <div><span class="info-label">Table No:</span> </div>
+                </div>
+            </div>
+            
+            <div class="bill-items">
+                <div class="item-row item-header">
+                    <div>Item</div>
+                    <div>Price</div>
+                    <div>Qty</div>
+                    <div>Amount</div>
+                </div><div class="item-row">
+            <div>Bagels with Cream Cheese</div>
+            <div>₹130.00</div>
+            <div>1</div>
+            <div>₹130.00</div>
+        </div><div class="item-row">
+            <div>Blueberry Cheesecake </div>
+            <div>₹90.00</div>
+            <div>1</div>
+            <div>₹90.00</div>
+        </div>
+            </div>
+            
+            <div class="bill-total">
+                <div><span class="info-label">Subtotal:</span> ₹220.00</div>
+                <div><span class="info-label">CGST (2.5%):</span> ₹5.50</div>
+                <div><span class="info-label">SGST (2.5%):</span> ₹5.50</div>
+                <div class="grand-total"><span class="info-label">Grand Total:</span> ₹231.00</div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <p style="text-align: center;">Thank you for dining with us!</p>
+                <p style="text-align: center; color: #666;">This is a computer-generated bill and does not require signature.</p>
+            </div>
+            
+            
+        </div>
+    </body>
+    </html>

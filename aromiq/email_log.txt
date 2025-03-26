@@ -1,0 +1,105 @@
+[2025-03-19 17:24:10][info] Email request received
+[2025-03-19 17:24:10][info] POST data: {"recipient":"neeevaacodes@gmail.com","subject":"Your Aromiq Bill Receipt #1234...","message":"","order_number":"12345","csrf_token":"[FILTERED]"}
+[2025-03-19 17:24:10][info] Processing email to: neeevaacodes@gmail.com for order: 12345
+[2025-03-19 17:24:10][info] Querying database for order: 12345
+[2025-03-19 17:24:10][info] Order found, retrieving order items
+[2025-03-19 17:24:10][info] Found 1 items for order: 12345
+[2025-03-19 17:24:10][info] Saved email content to file: email_1742401450_827ccb.html
+[2025-03-19 17:24:10][info] Attempting to send email to: neeevaacodes@gmail.com
+[2025-03-19 17:24:12][info] PHP mail() function failed, trying alternative method
+[2025-03-19 17:26:23][info] Email request received
+[2025-03-19 17:26:23][info] POST data: {"recipient":"neeevaacodes@gmail.com","subject":"Your Aromiq Bill Receipt #1234...","message":"","order_number":"12345","csrf_token":"[FILTERED]"}
+[2025-03-19 17:26:23][info] Processing email to: neeevaacodes@gmail.com for order: 12345
+[2025-03-19 17:26:23][info] Querying database for order: 12345
+[2025-03-19 17:26:23][info] Order found, retrieving order items
+[2025-03-19 17:26:23][info] Found 1 items for order: 12345
+[2025-03-19 17:26:23][info] Saved email content to file: email_1742401583_827ccb.html
+[2025-03-19 17:26:23][info] Attempting to send email to: neeevaacodes@gmail.com
+[2025-03-19 17:26:25][info] PHP mail() function failed, trying alternative method
+[2025-03-19 17:26:54][info] Email request received
+[2025-03-19 17:26:54][info] POST data: {"recipient":"neeevaacodes@gmail.com","subject":"Your Aromiq Bill Receipt #1234...","message":"","order_number":"12345","csrf_token":"[FILTERED]"}
+[2025-03-19 17:26:54][info] Processing email to: neeevaacodes@gmail.com for order: 12345
+[2025-03-19 17:26:54][info] Querying database for order: 12345
+[2025-03-19 17:26:54][info] Order found, retrieving order items
+[2025-03-19 17:26:54][info] Found 1 items for order: 12345
+[2025-03-19 17:26:54][info] Saved email content to file: email_1742401614_827ccb.html
+[2025-03-19 17:26:54][info] Attempting to send email to: neeevaacodes@gmail.com
+[2025-03-19 17:26:56][info] PHP mail() function failed, trying alternative method
+[2025-03-19 17:45:39][info] Email request received
+[2025-03-19 17:45:39][info] POST data: {"recipient":"veyerih575@barodis.com","subject":"Your Aromiq Bill Receipt #1234...","message":"","order_number":"12345","csrf_token":"[FILTERED]"}
+[2025-03-19 17:45:39][info] Processing email to: veyerih575@barodis.com for order: 12345
+[2025-03-19 17:45:39][info] Querying database for order: 12345
+[2025-03-19 17:45:39][error] Order not found: 12345
+[2025-03-19 17:45:39][error] Error: Order not found with ID: 12345
+[2025-03-19 17:46:30][info] Email request received
+[2025-03-19 17:46:30][info] POST data: {"recipient":"veyerih575@barodis.com","subject":"Your Aromiq Bill Receipt #1234...","message":"","order_number":"12345","csrf_token":"[FILTERED]"}
+[2025-03-19 17:46:30][info] Processing email to: veyerih575@barodis.com for order: 12345
+[2025-03-19 17:46:30][info] Querying database for order: 12345
+[2025-03-19 17:46:30][error] Order not found: 12345
+[2025-03-19 17:46:30][error] Error: Order not found with ID: 12345
+[2025-03-19 17:48:33][info] Email request received
+[2025-03-19 17:48:33][info] POST data: {"recipient":"veyerih575@barodis.com","subject":"Your Aromiq Bill Receipt #1234...","message":"","order_number":"12345","csrf_token":"[FILTERED]"}
+[2025-03-19 17:48:33][info] Processing email to: veyerih575@barodis.com for order: 12345
+[2025-03-19 17:48:33][info] Using order from session data
+[2025-03-19 17:48:33][info] Order data: ["details","items","total","timestamp"]
+[2025-03-19 17:48:35][info] PHP mail() function failed, trying alternative method
+[2025-03-19 17:51:45][info] Email request received
+[2025-03-19 17:51:45][info] POST data: {"recipient":"veyerih575@barodis.com","subject":"Your Aromiq Bill Receipt #1234...","message":"","order_number":"12345","csrf_token":"[FILTERED]"}
+[2025-03-19 17:51:45][info] Processing email to: veyerih575@barodis.com for order: 12345
+[2025-03-19 17:51:45][info] Using order from session data
+[2025-03-19 17:51:45][info] Order data: ["details","items","total","timestamp"]
+[2025-03-19 17:51:52][info] Email request received
+[2025-03-19 17:51:52][info] POST data: {"recipient":"veyerih575@barodis.com","subject":"Your Aromiq Bill Receipt #1234...","message":"","order_number":"12345","csrf_token":"[FILTERED]"}
+[2025-03-19 17:51:52][info] Processing email to: veyerih575@barodis.com for order: 12345
+[2025-03-19 17:51:52][info] Using order from session data
+[2025-03-19 17:51:52][info] Order data: ["details","items","total","timestamp"]
+[2025-03-20 20:03:40][info] Email request received
+[2025-03-20 20:03:40][info] POST data: {"recipient":"ryanrejijohn2025@it.ajce.in","subject":"Your Aromiq Bill Receipt #1234...","message":"","order_number":"12345","csrf_token":"[FILTERED]"}
+[2025-03-20 20:03:40][info] Processing email to: ryanrejijohn2025@it.ajce.in for order: 12345
+[2025-03-20 20:03:40][info] Using order from session data
+[2025-03-20 20:03:40][info] Order data: ["details","items","total","timestamp"]
+[2025-03-20 20:12:28][info] Email request received
+[2025-03-20 20:12:28][info] POST data: {"recipient":"veyerih575@barodis.com","subject":"Your Aromiq Bill Receipt #1234...","message":"","order_number":"12345","csrf_token":"[FILTERED]"}
+[2025-03-20 20:12:28][info] Processing email to: veyerih575@barodis.com for order: 12345
+[2025-03-20 20:12:28][info] Using order from session data
+[2025-03-20 20:12:28][info] Order data: ["details","items","total","timestamp"]
+[2025-03-20 20:54:57][info] Email request received
+[2025-03-20 20:54:57][info] POST data: {"recipient":"ryanrejijohn2025@it.ajce.in","subject":"Your Aromiq Bill Receipt #BILL...","message":"","order_number":"ORD-20250320-3028","csrf_token":"[FILTERED]"}
+[2025-03-20 20:54:57][info] Processing email to: ryanrejijohn2025@it.ajce.in for order: ORD-20250320-3028
+[2025-03-20 20:54:57][info] Using order from session data
+[2025-03-20 20:54:57][info] Order data: ["details","items","total","timestamp","order_id"]
+[2025-03-21 12:40:31][info] Email request received
+[2025-03-21 12:40:31][info] POST data: {"recipient":"ryan@yahoo.nom","subject":"Your Aromiq Bill Receipt #BILL...","message":"","order_number":"ORD1742557138351","csrf_token":"[FILTERED]"}
+[2025-03-21 12:40:31][info] Processing email to: ryan@yahoo.nom for order: ORD1742557138351
+[2025-03-21 12:40:31][info] Using order from session data
+[2025-03-21 12:40:31][info] Order data: ["order_id","customer_name","customer_email","customer_phone","table_number","subtotal","tax","total","payment_method","timestamp","items"]
+[2025-03-24 04:08:14][info] Email request received
+[2025-03-24 04:08:14][info] POST data: {"recipient":"drishya@whnm.vm","subject":"Your Aromiq Bill Receipt #BILL...","message":"","order_number":"ORD1742785607536","csrf_token":"[FILTERED]"}
+[2025-03-24 04:08:14][info] Processing email to: drishya@whnm.vm for order: ORD1742785607536
+[2025-03-24 04:08:14][info] Using order from session data
+[2025-03-24 04:08:14][info] Order data: ["order_id","customer_name","customer_email","customer_phone","table_number","subtotal","tax","total","payment_method","timestamp","items"]
+[2025-03-24 05:35:35][info] Email request received
+[2025-03-24 05:35:35][info] POST data: {"recipient":"ryan@yahoo.nom","subject":"Your Aromiq Bill Receipt #BILL...","message":"","order_number":"ORD1742790906216","csrf_token":"[FILTERED]"}
+[2025-03-24 05:35:35][info] Processing email to: ryan@yahoo.nom for order: ORD1742790906216
+[2025-03-24 05:35:35][info] Using order from session data
+[2025-03-24 05:35:35][info] Order data: ["order_id","customer_name","customer_email","customer_phone","table_number","subtotal","tax","total","payment_method","timestamp","items"]
+[2025-03-24 10:39:48][info] Email request received
+[2025-03-24 10:39:48][info] POST data: {"recipient":"milujiji@gmail.com","subject":"Your Aromiq Bill Receipt #BILL...","message":"","order_number":"ORD1742809111917","csrf_token":"[FILTERED]"}
+[2025-03-24 10:39:48][info] Processing email to: milujiji@gmail.com for order: ORD1742809111917
+[2025-03-24 10:39:48][info] Using order from session data
+[2025-03-24 10:39:48][info] Order data: ["order_id","customer_name","customer_email","customer_phone","table_number","subtotal","tax","total","payment_method","timestamp","items"]
+[2025-03-25 05:58:20][info] Email request received
+[2025-03-25 05:58:20][info] POST data: {"recipient":"anandhu@gmail.com","subject":"Your Aromiq Bill Receipt #BILL...","message":"","order_number":"ORD1742878535129","csrf_token":"[FILTERED]"}
+[2025-03-25 05:58:20][info] Processing email to: anandhu@gmail.com for order: ORD1742878535129
+[2025-03-25 05:58:20][info] Using order from session data
+[2025-03-25 05:58:20][info] Order data: ["order_id","customer_name","customer_email","customer_phone","table_number","subtotal","tax","total","payment_method","timestamp","items"]
+[2025-03-25 05:58:28][info] Email request received
+[2025-03-25 05:58:28][info] POST data: {"recipient":"anandhu@gmail.com","subject":"Your Aromiq Bill Receipt #BILL...","message":"","order_number":"ORD1742878535129","csrf_token":"[FILTERED]"}
+[2025-03-25 05:58:28][info] Processing email to: anandhu@gmail.com for order: ORD1742878535129
+[2025-03-25 05:58:28][info] Using order from session data
+[2025-03-25 05:58:28][info] Order data: ["order_id","customer_name","customer_email","customer_phone","table_number","subtotal","tax","total","payment_method","timestamp","items"]
+[2025-03-25 06:35:26][info] Email request received
+[2025-03-25 06:35:26][info] POST data: {"recipient":"balan@gmail.com","subject":"Your Aromiq Bill Receipt #BILL...","message":"","order_number":"ORD1742880863623","csrf_token":"[FILTERED]"}
+[2025-03-25 06:35:26][info] Processing email to: balan@gmail.com for order: ORD1742880863623
+[2025-03-25 06:35:26][info] Using order from session data
+[2025-03-25 06:35:26][info] Order data: ["order_id","customer_name","customer_email","customer_phone","table_number","subtotal","tax","total","payment_method","timestamp","items"]
