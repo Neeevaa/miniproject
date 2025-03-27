@@ -95,20 +95,14 @@
     <div class="row g-0">
         <div class="col-md-6">
             <div class="video">
-                <!--<button type="button" class="btn-play" data-bs-toggle="modal" data-src="https://www.youtube.com/embed/DWRcNpR6Kdc" data-bs-target="#videoModal">
-                    <span><img src="img/video.jpg"></span>-->
+                <button type="button" class="btn-play" data-bs-toggle="modal" data-src="https://www.youtube.com/embed/DWRcNpR6Kdc" data-bs-target="#videoModal">
+                    <span><img src="img/video.jpg"></span>
             </div>
         </div> 
         <div class="col-md-6 bg-dark d-flex align-items-center">
             <div class="p-5 wow fadeInUp" data-wow-delay="0.2s">
                 <h5 class="section-title ff-secondary text-start text-primary fw-normal">Reservation</h5>
                 <h1 class="text-white mb-4">Book A Table Online</h1>
-                <div id="bookingSuccess" class="alert alert-success mt-3" style="display: none;">
-                    Booking confirmed! We look forward to serving you.
-                </div>
-                <div id="bookingError" class="alert alert-danger mt-3" style="display: none;">
-                    An error occurred. Please try again.
-                </div>
                 <form action="process-booking.php" method="POST" id="bookingForm">
                     <div class="row g-3">
                         <div class="col-md-6">
@@ -125,30 +119,38 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="tel" class="form-control" id="phone" name="phone" placeholder="Your Phone">
-                                <label for="phone">Your Phone</label>
+                                <select class="form-select" id="table_number" name="table_number">
+                                    <option value="">Select Table</option>
+                                    <option value="1">Table 1</option>
+                                    <option value="2">Table 2</option>
+                                    <option value="3">Table 3</option>
+                                    <option value="4">Table 4</option>
+                                    <option value="5">Table 5</option>
+                                    <option value="6">Table 6</option>
+                                    <option value="7">Table 7</option>
+                                    <option value="8">Table 8</option>
+                                    <option value="9">Table 9</option>
+                                    <option value="10">Table 10</option>
+                                    <option value="11">Table 11</option>
+                                    <option value="12">Table 12</option>
+                                </select>
+                                <label for="table_number">Table Number</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating date" id="date3" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" id="datetime" name="datetime" placeholder="Date & Time" data-target="#date3" data-toggle="datetimepicker" />
+                                <label for="datetime">Date & Time</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="date" class="form-control" id="date" name="date">
-                                <label for="date">Date</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <input type="time" class="form-control" id="time" name="time">
-                                <label for="time">Time</label>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-floating">
-                                <select class="form-select" id="people" name="people">
+                                <select class="form-select" id="people_count" name="people_count">
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
                                 </select>
-                                <label for="people">No Of People</label>
+                                <label for="people_count">No Of People</label>
                             </div>
                         </div>
                         <div class="col-12">
@@ -277,64 +279,210 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script>
-        // Clean up the JavaScript by removing duplicate event listeners
 document.addEventListener('DOMContentLoaded', function() {
+    let isSubmitting = false; // Flag to prevent multiple submissions
     const bookingForm = document.getElementById('bookingForm');
-    
+    const submitBtn = bookingForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+
     bookingForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
+        // Prevent multiple submissions
+        if (isSubmitting) return;
+        isSubmitting = true;
+        
+        // Disable submit button and show processing state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+        
         // Clear previous error messages
-        const errorElements = document.querySelectorAll('.invalid-feedback');
-        errorElements.forEach(el => el.remove());
+        clearErrorMessages();
         
-        // Reset validation state
-        const formInputs = bookingForm.querySelectorAll('input, select, textarea');
-        formInputs.forEach(input => {
-            input.classList.remove('is-invalid');
-        });
+        // Validate form
+        let isValid = true;
         
-        // Hide any previous messages
-        document.getElementById('bookingSuccess').style.display = 'none';
-        document.getElementById('bookingError').style.display = 'none';
-        
-        // Get form data
-        const formData = new FormData(bookingForm);
-        
-        // Debug log
-        console.log('Submitting booking with data:');
-        for (let pair of formData.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
+        // Validate name (required)
+        const name = document.getElementById('name');
+        if (!name.value.trim()) {
+            showError(name, 'Name is required');
+            isValid = false;
+        } else if (name.value.trim().length < 3) {
+            showError(name, 'Name should be at least 3 characters');
+            isValid = false;
         }
         
-        // Send AJAX request
-        fetch('process-booking.php', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Server returned ' + response.status + ': ' + response.statusText);
+        // Validate email (required, valid format)
+        const email = document.getElementById('email');
+        if (!email.value.trim()) {
+            showError(email, 'Email is required');
+            isValid = false;
+        } else if (!isValidEmail(email.value.trim())) {
+            showError(email, 'Please enter a valid email address');
+            isValid = false;
+        }
+        
+        // Validate phone number (required)
+        const phone = document.createElement('input');
+        phone.id = 'phone';
+        phone.name = 'phone';
+        phone.type = 'tel';
+        phone.value = phone.value || ''; // Ensure phone is added to the form
+        if (!phone.value.trim()) {
+            showError(phone, 'Phone number is required');
+            isValid = false;
+        } else if (!isValidPhoneNumber(phone.value.trim())) {
+            showError(phone, 'Please enter a valid phone number');
+            isValid = false;
+        }
+        
+        // Validate table number (required)
+        const tableNumber = document.getElementById('table_number');
+        if (!tableNumber.value) {
+            showError(tableNumber, 'Please select a table number');
+            isValid = false;
+        }
+        
+        // Validate date (required)
+        const dateInput = document.createElement('input');
+        dateInput.id = 'date';
+        dateInput.name = 'date';
+        dateInput.type = 'date';
+        dateInput.value = dateInput.value || ''; // Ensure date is added to the form
+        if (!dateInput.value.trim()) {
+            showError(dateInput, 'Date is required');
+            isValid = false;
+        }
+        
+        // Validate time (required)
+        const timeInput = document.createElement('input');
+        timeInput.id = 'time';
+        timeInput.name = 'time';
+        timeInput.type = 'time';
+        timeInput.value = timeInput.value || ''; // Ensure time is added to the form
+        if (!timeInput.value.trim()) {
+            showError(timeInput, 'Time is required');
+            isValid = false;
+        }
+        
+        // Validate number of people (required)
+        const peopleCount = document.getElementById('people_count');
+        if (!peopleCount.value) {
+            showError(peopleCount, 'Number of people is required');
+            isValid = false;
+        }
+        
+        // If validation passes, submit the form
+        if (isValid) {
+            // Combine date and time for datetime
+            const combinedDateTime = `${dateInput.value} ${timeInput.value}`;
+            const hiddenDatetime = document.createElement('input');
+            hiddenDatetime.type = 'hidden';
+            hiddenDatetime.name = 'datetime';
+            hiddenDatetime.value = combinedDateTime;
+            bookingForm.appendChild(hiddenDatetime);
+            
+            // Add phone to form if not present
+            if (!document.getElementById('phone')) {
+                phone.type = 'hidden';
+                bookingForm.appendChild(phone);
             }
-            return response.json();
-        })
-        .then(data => {
-            if (data.success) {
-                // Show success message
-                document.getElementById('bookingForm').style.display = 'none';
-                document.getElementById('bookingSuccess').style.display = 'block';
-            } else {
-                // Show error message
-                document.getElementById('bookingError').textContent = data.message || 'Failed to book table. Please try again.';
-                document.getElementById('bookingError').style.display = 'block';
-            }
-        })
-        .catch(error => {
-            console.error('Booking error:', error);
-            document.getElementById('bookingError').textContent = 'Error submitting booking: ' + error.message;
-            document.getElementById('bookingError').style.display = 'block';
-        });
+            
+            // Get form data
+            const formData = new FormData(bookingForm);
+            
+            // Send AJAX request
+            fetch('process-booking.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Server returned ' + response.status + ': ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    showSuccessMessage('Booking confirmed! We look forward to serving you.');
+                    bookingForm.reset(); // Clear form
+                } else {
+                    // Show error message
+                    showErrorMessage(data.message || 'Failed to book table. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Booking error:', error);
+                showErrorMessage('Error submitting booking. Please try again later.');
+            })
+            .finally(() => {
+                // Always reset submission state
+                isSubmitting = false;
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        } else {
+            // Reset submission state if validation fails
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        }
     });
+    
+    function showError(inputElement, message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'invalid-feedback d-block';
+        errorDiv.textContent = message;
+        
+        inputElement.classList.add('is-invalid');
+        inputElement.parentElement.appendChild(errorDiv);
+    }
+    
+    function clearErrorMessages() {
+        document.querySelectorAll('.is-invalid').forEach(el => {
+            el.classList.remove('is-invalid');
+        });
+        
+        document.querySelectorAll('.invalid-feedback').forEach(el => {
+            el.remove();
+        });
+    }
+    
+    function showSuccessMessage(message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success mt-3';
+        alertDiv.textContent = message;
+        
+        bookingForm.parentElement.insertBefore(alertDiv, bookingForm);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+    
+    function showErrorMessage(message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-danger mt-3';
+        alertDiv.textContent = message;
+        
+        bookingForm.parentElement.insertBefore(alertDiv, bookingForm);
+        
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 5000);
+    }
+    
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+    
+    function isValidPhoneNumber(phone) {
+        // Basic phone number validation (adjust regex as needed)
+        const phoneRegex = /^[+]?[\s./0-9]*[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/;
+        return phoneRegex.test(phone);
+    }
 });
     </script>
 </body>

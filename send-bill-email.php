@@ -6,13 +6,31 @@ error_reporting(E_ALL);
 // Always set content type to JSON
 header('Content-Type: application/json');
 
-// Include PHPMailer classes manually
-require_once __DIR__ . '/vendor/phpmailer/phpmailer/src/Exception.php';
-require_once __DIR__ . '/vendor/phpmailer/phpmailer/src/PHPMailer.php';
-require_once __DIR__ . '/vendor/phpmailer/phpmailer/src/SMTP.php';
+// Vendor autoload path
+$vendorAutoload = __DIR__ . '/vendor/autoload.php';
 
+// Check for Composer's autoloader first
+if (file_exists($vendorAutoload)) {
+    require_once $vendorAutoload;
+} else {
+    // Fallback manual include with robust path resolution
+    $phpmailerBasePath = realpath(__DIR__ . '/vendor/phpmailer/src');
+    
+    if ($phpmailerBasePath === false) {
+        die(json_encode([
+            'success' => false, 
+            'message' => 'PHPMailer not found. Please install via Composer or manually.'
+        ]));
+    }
+    
+    require_once $phpmailerBasePath . '/Exception.php';
+    require_once $phpmailerBasePath . '/PHPMailer.php';
+    require_once $phpmailerBasePath . '/SMTP.php';
+}
+
+// Explicitly use PHPMailer classes with namespace
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\Exception;
+use PHPMailer\PHPMailer\Exception as PHPMailerException;
 use PHPMailer\PHPMailer\SMTP;
 
 try {
@@ -21,12 +39,12 @@ try {
     // Verify CSRF token
     if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || 
         $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        throw new Exception('Invalid security token');
+        throw new PHPMailerException('Invalid security token');
     }
 
     // Check required fields
     if (!isset($_POST['recipient']) || !isset($_POST['order_number'])) {
-        throw new Exception('Required fields are missing');
+        throw new PHPMailerException('Required fields are missing');
     }
 
     include 'connect.php';
@@ -46,7 +64,7 @@ try {
     $result = mysqli_stmt_get_result($stmt);
     
     if (!$result || mysqli_num_rows($result) === 0) {
-        throw new Exception('Order not found');
+        throw new PHPMailerException('Order not found');
     }
 
     $order = mysqli_fetch_assoc($result);
@@ -92,7 +110,7 @@ try {
     $emailBody = "
     <div style='font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto;'>
         <div style='background-color: #fea116; color: white; padding: 20px; text-align: center;'>
-            <h1 style='margin:0;'>Aromiq Restaurant</h1>
+            <h1 style='margin:0;'>Aurumé Restaurant</h1>
             <p style='margin:10px 0 0;'>Bill Receipt</p>
         </div>
         
@@ -148,9 +166,9 @@ try {
 
         <div style='text-align: center; padding: 20px; background-color: #f5f5f5; margin-top: 20px;'>
             <p style='margin: 5px 0;'>Thank you for dining with us!</p>
-            <p style='margin: 5px 0;'>Aromiq Restaurant</p>
+            <p style='margin: 5px 0;'>Aurumé Restaurant</p>
             <p style='margin: 5px 0;'>123 Food Street, Cuisine City</p>
-            <p style='margin: 5px 0;'>Phone: +1234567890</p>
+            <p style='margin: 5px 0;'>Phone: +91 9895316120</p>
             <p style='margin: 15px 0; font-size: 0.9em; color: #666;'>This is a computer-generated bill and does not require signature.</p>
         </div>
     </div>";
@@ -162,7 +180,7 @@ try {
     $useFileFallback = true;
     
     try {
-        // Try SMTP first with a short timeout - exactly like notify_booking.php
+        // Try SMTP first with a short timeout
         $mail->SMTPDebug = SMTP::DEBUG_OFF;                       // Disable debug output
         $mail->isSMTP();                                          // Send using SMTP
         $mail->Host       = 'smtp.gmail.com';                     // Set the SMTP server
@@ -174,7 +192,7 @@ try {
         $mail->Timeout    = 5;                                    // Set a shorter timeout (5 seconds)
 
         // Recipients
-        $mail->setFrom('neeevaacodes@gmail.com', 'Aromiq Restaurant');
+        $mail->setFrom('neeevaacodes@gmail.com', 'Aurumé Restaurant');
         $mail->addAddress($recipient);
         $mail->addReplyTo('contact@aromiq.com', 'Aromiq Support');
 
@@ -188,7 +206,7 @@ try {
         $mail->send();
         $useFileFallback = false; // SMTP worked, don't need fallback
         
-    } catch (Exception $e) {
+    } catch (PHPMailerException $e) {
         // Log the SMTP error but don't stop execution
         error_log("SMTP connection failed: " . $e->getMessage());
         // Continue to fallback method
@@ -219,7 +237,7 @@ try {
         'fallback_used' => $useFileFallback
     ]);
 
-} catch (Exception $e) {
+} catch (PHPMailerException $e) {
     error_log('Error in send-bill-email.php: ' . $e->getMessage());
     http_response_code(500);
     echo json_encode([
@@ -231,4 +249,4 @@ try {
         mysqli_close($conn);
     }
 }
-?> 
+?>

@@ -460,10 +460,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.send-email').forEach(button => {
         button.addEventListener('click', function() {
             const bookingId = this.getAttribute('data-booking-id');
-            alert('Email notification feature would be implemented here.');
-            // In a real implementation, you would:
-            // 1. Send a request to a PHP script that gets the booking details
-            // 2. Use PHPMailer or similar to send an email to the customer
+            notifyCustomer(bookingId);
         });
     });
     
@@ -495,6 +492,65 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => {
             console.error('Error:', error);
             alert('An error occurred. Please try again.');
+        });
+    }
+
+    // Add this function to send email notification
+    function notifyCustomer(bookingId) {
+        const button = event.target;
+        const originalText = button.textContent;
+
+        // Show loading state
+        button.disabled = true;
+        button.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Sending...';
+
+        fetch('notify_booking.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `booking_id=${bookingId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Show success state
+                button.classList.remove('btn-info');
+                button.classList.add('btn-success');
+                button.innerHTML = '<i class="fas fa-check"></i> Sent';
+
+                // Show toast notification
+                showToast('Success', 'Booking confirmation email sent successfully', 'success');
+
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.classList.remove('btn-success');
+                    button.classList.add('btn-info');
+                    button.textContent = originalText;
+                }, 3000);
+            } else {
+                throw new Error(data.message || 'Failed to send notification');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+
+            // Reset button to error state
+            button.disabled = false;
+            button.classList.remove('btn-info');
+            button.classList.add('btn-danger');
+            button.textContent = 'Failed';
+
+            // Show error toast
+            showToast('Error', 'Failed to send notification. Please try again.', 'danger');
+
+            // Reset button after 3 seconds
+            setTimeout(() => {
+                button.classList.remove('btn-danger');
+                button.classList.add('btn-info');
+                button.textContent = originalText;
+            }, 3000);
         });
     }
 });
