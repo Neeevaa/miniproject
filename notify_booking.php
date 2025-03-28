@@ -62,13 +62,13 @@ try {
         $mail->Port       = 587;
 
         // Recipients
-        $mail->setFrom('no-reply@aromiq.com', 'Aromiq Restaurant');
+        $mail->setFrom('no-reply@aromiq.com', 'Aurumé Restaurant');
         $mail->addAddress($booking['email']);
         $mail->addReplyTo('contact@aromiq.com', 'Aromiq Support');
 
         // Content
         $mail->isHTML(true);
-        $mail->Subject = "Aromiq - Table Booking Confirmation #" . $booking['booking_id'];
+        $mail->Subject = "Aurumé - Table Booking Confirmation #" . $booking['booking_id'];
         
         // HTML email template (same as previous script)
         $message = "
@@ -94,7 +94,7 @@ try {
                 <div class='content'>
                     <p>Dear " . htmlspecialchars($booking['name']) . ",</p>
                     
-                    <p>Thank you for choosing Aromiq! Your table booking has been confirmed. Here are your booking details:</p>
+                    <p>Thank you for choosing Aurumé! Your table booking has been confirmed. Here are your booking details:</p>
                     
                     <div class='details'>
                         <table>
@@ -150,7 +150,7 @@ try {
                     <p>Phone: +1234567890<br>Email: contact@aromiq.com</p>
                 </div>
                 <div class='footer'>
-                    <p>Aromiq Restaurant<br>123 Food Street, Cuisine City<br>Thank you for choosing us!</p>
+                    <p>Aurumé Restaurant<br>123 Food Street, Cuisine City<br>Thank you for choosing us!</p>
                 </div>
             </div>
         </body>

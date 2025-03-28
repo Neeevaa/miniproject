@@ -59,14 +59,14 @@
                         <a href="about.html" class="nav-item nav-link">About</a>
 
                         <a href="menu.php" class="nav-item nav-link">Menu</a>
-                        <div class="nav-item dropdown">
+                        <!--<div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Services</a>
-                            <div class="dropdown-menu m-0">
-                                <a href="booking.html" class="dropdown-item active">Booking</a>
-                                <a href="team.html" class="dropdown-item">Our Team</a>
-                                <a href="testimonial.html" class="dropdown-item">Testimonial</a>
-                            </div>
-                        </div>
+                            <div class="dropdown-menu m-0">-->
+                                <a href="booking.html" class="nav-item nav-link active">Booking</a>
+                                <a href="team.html" class="nav-item nav-link">Our Team</a>
+                                <a href="testimonial.html" class="nav-item nav-link">Testimonial</a>
+                           <!-- </div>
+                        </div>-->
                         <a href="contact.html" class="nav-item nav-link">Contact</a>
                     </div>
                     <a href="login.php" class="btn btn-primary py-2 px-4">Login</a>
@@ -279,6 +279,188 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    let isSubmitting = false; // Flag to prevent multiple submissions
+    const bookingForm = document.getElementById('bookingForm');
+    const submitBtn = bookingForm.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn.innerHTML;
+
+    bookingForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Prevent multiple submissions
+        if (isSubmitting) return;
+        isSubmitting = true;
+        
+        // Disable submit button and show processing state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+        
+        // Clear previous error messages
+        clearErrorMessages();
+        
+        // Validate form
+        let isValid = true;
+        
+        // Validate name (required)
+        const name = document.getElementById('name');
+        if (!name.value.trim()) {
+            showError(name, 'Name is required');
+            isValid = false;
+        } else if (name.value.trim().length < 3) {
+            showError(name, 'Name should be at least 3 characters');
+            isValid = false;
+        }
+        
+        // Validate email (required, valid format)
+        const email = document.getElementById('email');
+        if (!email.value.trim()) {
+            showError(email, 'Email is required');
+            isValid = false;
+        } else if (!isValidEmail(email.value.trim())) {
+            showError(email, 'Please enter a valid email address');
+            isValid = false;
+        }
+        
+        // Validate table number (required)
+        const tableNumber = document.getElementById('table_number');
+        if (!tableNumber.value) {
+            showError(tableNumber, 'Please select a table number');
+            isValid = false;
+        }
+        
+        // Validate datetime
+        const datetimeInput = document.getElementById('datetime');
+        if (!datetimeInput.value.trim()) {
+            showError(datetimeInput, 'Date and Time are required');
+            isValid = false;
+        }
+        
+        // Validate number of people (required)
+        const peopleCount = document.getElementById('people_count');
+        if (!peopleCount.value) {
+            showError(peopleCount, 'Number of people is required');
+            isValid = false;
+        }
+        
+        // If initial validation passes, check table availability
+        if (isValid) {
+            // Create FormData to send validation request
+            const validationData = new FormData();
+            validationData.append('table_number', tableNumber.value);
+            validationData.append('datetime', datetimeInput.value);
+            
+            // Check table availability via AJAX
+            fetch('check-table-availability.php', {
+                method: 'POST',
+                body: validationData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Server returned ' + response.status + ': ' + response.statusText);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.is_available) {
+                    // Table is available, proceed with booking
+                    submitBooking(bookingForm, submitBtn, originalBtnText);
+                } else {
+                    // Table is already booked
+                    showUnavailableTableModal(tableNumber.value, datetimeInput.value);
+                    isSubmitting = false;
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalBtnText;
+                }
+            })
+            .catch(error => {
+                console.error('Availability check error:', error);
+                showErrorMessage('Error checking table availability. Please try again later.');
+                isSubmitting = false;
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        } else {
+            // Reset submission state if validation fails
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        }
+    });
+
+    function showUnavailableTableModal(tableNumber, datetime) {
+        // Create modal dynamically
+        const modalHtml = `
+        <div class="modal fade" id="tableUnavailableModal" tabindex="-1" aria-labelledby="tableUnavailableModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title" id="tableUnavailableModalLabel">Table Not Available</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>We apologize, but Table ${tableNumber} is already booked for the selected date and time.</p>
+                        <p>Please choose a different table or select an alternative time slot.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // Remove any existing modal
+        const existingModal = document.getElementById('tableUnavailableModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        // Add modal to body
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+        // Show the modal using Bootstrap's modal method
+        const modalElement = document.getElementById('tableUnavailableModal');
+        const modal = new bootstrap.Modal(modalElement);
+        modal.show();
+    }
+
+    function submitBooking(bookingForm, submitBtn, originalBtnText) {
+        // Get form data
+        const formData = new FormData(bookingForm);
+        
+        // Send AJAX request
+        fetch('process-booking.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Server returned ' + response.status + ': ' + response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Show success message
+                showSuccessMessage('Booking confirmed! We look forward to serving you.');
+                bookingForm.reset(); // Clear form
+            } else {
+                // Show error message
+                showErrorMessage(data.message || 'Failed to book table. Please try again.');
+            }
+        })
+        .catch(error => {
+            console.error('Booking error:', error);
+            showErrorMessage('Error submitting booking. Please try again later.');
+        })
+        .finally(() => {
+            // Always reset submission state
+            isSubmitting = false;
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+        });
+    }
 document.addEventListener('DOMContentLoaded', function() {
     let isSubmitting = false; // Flag to prevent multiple submissions
     const bookingForm = document.getElementById('bookingForm');
@@ -483,6 +665,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const phoneRegex = /^[+]?[\s./0-9]*[(]?[0-9]{1,4}[)]?[-\s./0-9]*$/;
         return phoneRegex.test(phone);
     }
+});
 });
     </script>
 </body>

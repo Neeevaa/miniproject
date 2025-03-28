@@ -306,6 +306,14 @@ if ($items_result) {
             background: #e08e0b;
             color: white;
         }
+    .menu-btn.disabled {
+        background: #cccccc;
+        color: #666666;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+
 
         /* Responsive design */
         @media (max-width: 768px) {
@@ -441,6 +449,38 @@ if ($items_result) {
     </div>
 
     <script>
+        function validateFeedbackButton() {
+    const orderId = '<?php echo $order_number; ?>';
+    const feedbackButton = document.querySelector('.menu-btn');
+    const currentStatus = document.querySelector('.current-status-text').textContent.trim();
+
+    if (currentStatus !== 'Served') {
+        // Disable the feedback button
+        feedbackButton.classList.add('disabled');
+        feedbackButton.setAttribute('title', 'Feedback available after order is served');
+        feedbackButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Feedback is only available after your order is served.');
+        });
+    }  // Modify existing updateOrderProgress function to re-check feedback button
+    const originalUpdateOrderProgress = window.updateOrderProgress;
+    window.updateOrderProgress = function() {
+        originalUpdateOrderProgress();
+        
+        const currentStatus = document.querySelector('.current-status-text').textContent.trim();
+        const feedbackButton = document.querySelector('.menu-btn');
+        
+        if (currentStatus === 'Served') {
+            // Enable the feedback button
+            feedbackButton.classList.remove('disabled');
+            feedbackButton.removeAttribute('title');
+            feedbackButton.removeEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Feedback is only available after your order is served.');
+            });
+        }
+    };
+}
         function updateOrderProgress() {
             const orderId = '<?php echo $order_number; ?>';
             fetch(`get_order_status_update.php?order_id=${encodeURIComponent(orderId)}`)
@@ -489,9 +529,10 @@ if ($items_result) {
 
         // Initial update and polling every 10 seconds
         document.addEventListener('DOMContentLoaded', function() {
-            updateOrderProgress();
-            setInterval(updateOrderProgress, 10000);
-        });
+    updateOrderProgress();
+    validateFeedbackButton();
+    setInterval(updateOrderProgress, 10000);
+});
     </script>
 </body>
 </html>
