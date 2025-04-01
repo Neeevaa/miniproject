@@ -979,6 +979,21 @@ $currentOrderId = null;
     }
 
     // The rest of your existing JavaScript...
+    function showPayments() {
+            // Hide other views
+            document.getElementById('ordersView').style.display = 'none';
+            document.getElementById('bookingsView').style.display = 'none';
+            document.getElementById('menuView').style.display = 'none';
+            
+            // Show payments view
+            document.getElementById('payments').style.display = 'block';
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            document.querySelector('.nav-link[onclick="showPayments()"]').classList.add('active');
+        }
+
+        // ... rest of your script code ...
     </script>
     <style>
     .table-grid {
@@ -1203,6 +1218,7 @@ $currentOrderId = null;
                     <a href="#" class="nav-link text-white active" onclick="showOrders()">📦 Orders</a>
                     <a href="#" class="nav-link text-white" onclick="showBookings()">📅 Table Reservations</a>
                     <a href="#" class="nav-link text-white" onclick="showMenu()">📜 Menu</a>
+                    <a href="#ordersView" class="nav-link text-white" onclick="showPayments()"><i class="fas fa-money-bill-wave me-2"></i> Payments</a>
                 </div>
             </div>
         </div>
@@ -1424,6 +1440,80 @@ while ($row = mysqli_fetch_assoc($result)) {
             </div>
         </div>
     </div>
+                <!-- Header -->
+                <div class="bg-dark py-2 px-4 w-100 d-flex justify-content-between align-items-center">
+                    <h4 class="text-white mb-0">Payment Transactions</h4>
+                    <a href="logout.php" class="btn btn-primary py-2 px-4" style="background-color: #fea116; border-color: #fea116;">Logout</a>
+                </div>
+                
+                <div class="container-fluid mt-4">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">All Payment Transactions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead class="bg-dark text-white">
+                                        <tr>
+                                            <th>Bill No</th>
+                                            <th>Customer Name</th>
+                                            <th>Payment Mode</th>
+                                            <th>Total Amount</th>
+                                            <th>Payment Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        // Fetch payment transactions from database
+                                        $sql = "SELECT order_id, customer_name, payment_method, total, payment_status 
+                                                FROM tbl_orders 
+                                                ORDER BY order_id DESC";
+                                        $result = mysqli_query($conn, $sql);
+
+                                        if (mysqli_num_rows($result) > 0) {
+                                            while($row = mysqli_fetch_assoc($result)) {
+                                                // Determine badge class for payment status
+                                                $statusClass = '';
+                                                switch($row['payment_status']) {
+                                                    case 'Paid':
+                                                        $statusClass = 'bg-success';
+                                                        break;
+                                                    case 'Pending':
+                                                        $statusClass = 'bg-warning text-dark';
+                                                        break;
+                                                    case 'Failed':
+                                                        $statusClass = 'bg-danger';
+                                                        break;
+                                                    default:
+                                                        $statusClass = 'bg-secondary';
+                                                }
+                                                
+                                                echo "<tr>";
+                                                echo "<td>" . htmlspecialchars($row['order_id']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['customer_name']) . "</td>";
+                                                echo "<td>" . htmlspecialchars($row['payment_method']) . "</td>";
+                                                echo "<td>₹" . number_format($row['total'], 2) . "</td>";
+                                                echo "<td><span class='badge {$statusClass}'>" . htmlspecialchars($row['payment_status']) . "</span></td>";
+                                                echo "</tr>";
+                                            }
+                                        } else {
+                                            echo "<tr><td colspan='5' class='text-center'>No payment transactions found</td></tr>";
+                                        }
+                                        ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Remove the duplicate payments section that was outside the main container -->
+
+
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1908,8 +1998,7 @@ while ($row = mysqli_fetch_assoc($result)) {
         </div>
       </div>
     </div>
-
-    <!-- Toast container for notifications -->
+     <!-- Toast container for notifications -->
     <div id="toastContainer" class="toast-container position-fixed bottom-0 end-0 p-3"></div>
 </body>
 </html>

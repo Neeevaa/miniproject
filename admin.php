@@ -46,12 +46,11 @@ function getStatusBadgeClass($status) {
         <div class="row">
             <!-- Sidebar -->
             <div class="col-md-2 bg-dark vh-100 d-flex flex-column align-items-center py-4">
-                <div class="nav flex-column w-100">
+            <div class="nav flex-column w-100">
                     <a href="#viewOrders" class="nav-link text-light">📦 View Orders</a>
                     <a href="#menuManagement" class="nav-link text-light">📜 Today's Menu</a>
-                  <!--  <a href="#viewUsers" class="nav-link">👥 View Users</a>-->
-                    <!-- Add this section to your admin.php file where you want to display the bookings -->
                     <a href="#topFoods" class="nav-link text-light">📊 Top Ordered Foods</a>
+                    <a href="#payments" class="nav-link text-light">💰 Payments</a>
                     <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Add the bookings link to your sidebar
@@ -702,7 +701,66 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
-                <!-- View Users 
+                <!-- ... existing sections ... -->
+                
+                <!-- Payments Section -->
+                <section id="payments" class="mb-5" style="display: none;">
+                    <h5>Payment Transactions</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="bg-dark text-light">
+                                <tr>
+                                    <th>Bill No</th>
+                                    <th>Customer Name</th>
+                                    <th>Payment Mode</th>
+                                    <th>Total Amount</th>
+                                    <th>Payment Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                // Fetch payment transactions from database
+                                $sql = "SELECT order_id, customer_name, payment_method, total, payment_status 
+                                        FROM tbl_orders 
+                                        ORDER BY order_id DESC";
+                                $result = mysqli_query($conn, $sql);
+
+                                if (mysqli_num_rows($result) > 0) {
+                                    while($row = mysqli_fetch_assoc($result)) {
+                                        // Determine badge class for payment status
+                                        $statusClass = '';
+                                        switch($row['payment_status']) {
+                                            case 'Paid':
+                                                $statusClass = 'bg-success';
+                                                break;
+                                            case 'Pending':
+                                                $statusClass = 'bg-warning text-dark';
+                                                break;
+                                            case 'Failed':
+                                                $statusClass = 'bg-danger';
+                                                break;
+                                            default:
+                                                $statusClass = 'bg-secondary';
+                                        }
+                                        
+                                        echo "<tr>";
+                                        echo "<td>" . htmlspecialchars($row['order_id']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['customer_name']) . "</td>";
+                                        echo "<td>" . htmlspecialchars($row['payment_method']) . "</td>";
+                                        echo "<td>₹" . number_format($row['total'], 2) . "</td>";
+                                        echo "<td><span class='badge {$statusClass}'>" . htmlspecialchars($row['payment_status']) . "</span></td>";
+                                        echo "</tr>";
+                                    }
+                                } else {
+                                    echo "<tr><td colspan='5' class='text-center'>No payment transactions found</td></tr>";
+                                }
+                                ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>           
+
+<!-- View Users 
                 <section id="viewUsers" class="mb-5">
                     <h5>View Users</h5>
                     <table class="table table-bordered">
