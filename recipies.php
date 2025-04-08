@@ -92,41 +92,108 @@
                 <div class="row g-4">
                     <div class="col-12">
                         <div class="wow fadeInUp" data-wow-delay="0.2s">
-                            <form>
+                            <?php
+                            // Check if form is submitted
+                            if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                                // Database configuration
+                                $servername = "localhost";
+                                $username = "admin";
+                                $password = "1234";
+                                $dbname = "aromiq";
+
+                                // Create connection
+                                $conn = new mysqli($servername, $username, $password, $dbname);
+
+                                // Check connection
+                                if ($conn->connect_error) {
+                                    die("Connection failed: " . $conn->connect_error);
+                                }
+
+                                // Get form data
+                                $name = $_POST['name'];
+                                $email = $_POST['email'];
+                                $recipe_name = $_POST['recipe_name'];
+                                $ingredients = $_POST['ingredients'];
+                                $instructions = $_POST['instructions'];
+                                $image_path = "";
+
+                                // Handle file upload
+                                if(isset($_FILES['recipe_image']) && $_FILES['recipe_image']['error'] == 0) {
+                                    $target_dir = "uploads/recipes/";
+                                    
+                                    // Create directory if it doesn't exist
+                                    if (!file_exists($target_dir)) {
+                                        mkdir($target_dir, 0777, true);
+                                    }
+                                    
+                                    $target_file = $target_dir . basename($_FILES["recipe_image"]["name"]);
+                                    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+                                    
+                                    // Generate unique filename
+                                    $new_filename = uniqid() . '.' . $imageFileType;
+                                    $target_file = $target_dir . $new_filename;
+                                    
+                                    // Check if image file is an actual image
+                                    $check = getimagesize($_FILES["recipe_image"]["tmp_name"]);
+                                    if($check !== false) {
+                                        // Upload file
+                                        if (move_uploaded_file($_FILES["recipe_image"]["tmp_name"], $target_file)) {
+                                            $image_path = $target_file;
+                                        }
+                                    }
+                                }
+
+                                // Prepare and bind
+                                $stmt = $conn->prepare("INSERT INTO tbl_recipes (name, email, recipe_name, ingredients, instructions, image_path) VALUES (?, ?, ?, ?, ?, ?)");
+                                $stmt->bind_param("ssssss", $name, $email, $recipe_name, $ingredients, $instructions, $image_path);
+
+                                // Execute the statement
+                                if ($stmt->execute()) {
+                                    echo '<div class="alert alert-success">Thank you for submitting your recipe! Our team will review it shortly.</div>';
+                                } else {
+                                    echo '<div class="alert alert-danger">Sorry, there was an error submitting your recipe. Please try again.</div>';
+                                }
+
+                                // Close statement and connection
+                                $stmt->close();
+                                $conn->close();
+                            }
+                            ?>
+                            <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
                                 <div class="row g-3">
                                     <div class="col-md-6">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" id="name" placeholder="Your Name">
+                                            <input type="text" class="form-control" id="name" name="name" placeholder="Your Name" required>
                                             <label for="name">Your Name</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-floating">
-                                            <input type="email" class="form-control" id="email" placeholder="Your Email">
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="Your Email" required>
                                             <label for="email">Your Email</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="text" class="form-control" id="recipe_name" placeholder="Recipe Name">
+                                            <input type="text" class="form-control" id="recipe_name" name="recipe_name" placeholder="Recipe Name" required>
                                             <label for="recipe_name">Recipe Name</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <textarea class="form-control" placeholder="Ingredients" id="ingredients" style="height: 150px"></textarea>
+                                            <textarea class="form-control" placeholder="Ingredients" id="ingredients" name="ingredients" style="height: 150px" required></textarea>
                                             <label for="ingredients">Ingredients (One per line)</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <textarea class="form-control" placeholder="Instructions" id="instructions" style="height: 200px"></textarea>
+                                            <textarea class="form-control" placeholder="Instructions" id="instructions" name="instructions" style="height: 200px" required></textarea>
                                             <label for="instructions">Cooking Instructions</label>
                                         </div>
                                     </div>
                                     <div class="col-12">
                                         <div class="form-floating">
-                                            <input type="file" class="form-control" id="recipe_image" accept="image/*">
+                                            <input type="file" class="form-control" id="recipe_image" name="recipe_image" accept="image/*">
                                             <label for="recipe_image">Upload Recipe Image</label>
                                         </div>
                                     </div>

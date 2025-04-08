@@ -73,7 +73,7 @@
             font-size: 14px;
         }
         
-        .spin-button {
+        .spin-button, .avail-prize-button {
             margin-top: 30px;
             padding: 15px 40px;
             font-size: 18px;
@@ -85,9 +85,19 @@
             transition: all 0.3s;
         }
         
-        .spin-button:hover {
+        .spin-button:hover, .avail-prize-button:hover {
             background-color: #e08c0b;
             transform: scale(1.05);
+        }
+        
+        .avail-prize-button {
+            display: none;
+            background-color: #28a745;
+            margin-top: 15px;
+        }
+        
+        .avail-prize-button:hover {
+            background-color: #218838;
         }
         
         .result {
@@ -188,6 +198,7 @@
                     <!-- Removed pointer div -->
                     <button class="spin-button" id="spin-button">SPIN</button>
                     <div class="result" id="result"></div>
+                    <a href="#" class="avail-prize-button" id="avail-prize-button">AVAIL PRIZE</a>
                 </div>
             </div>
         </div>
@@ -275,6 +286,7 @@
             const wheel = document.getElementById('wheel');
             const spinButton = document.getElementById('spin-button');
             const result = document.getElementById('result');
+            const availPrizeButton = document.getElementById('avail-prize-button');
             const canvas = document.getElementById('confetti-canvas');
             const myConfetti = confetti.create(canvas, { resize: true });
             
@@ -290,12 +302,15 @@
             ];
             
             let canSpin = true;
+            let currentPrize = "";
+            let currentCouponCode = "";
             
             spinButton.addEventListener('click', function() {
                 if (!canSpin) return;
                 
-                // Reset result
+                // Reset result and hide avail prize button
                 result.textContent = "";
+                availPrizeButton.style.display = "none";
                 
                 // Disable button during spin
                 canSpin = false;
@@ -319,12 +334,20 @@
                     // Check if the prize is "Better Luck Next Time"
                     if (prizeIndex === 7) {
                         result.textContent = "Better Luck Next Time!";
+                        currentPrize = "";
+                        currentCouponCode = "";
                     } else {
-                        result.textContent = `Congratulations! You won: ${prizes[prizeIndex]}`;
+                        currentPrize = prizes[prizeIndex];
+                        currentCouponCode = generateCouponCode();
                         
-                        // Show coupon code for prizes
-                        const couponCode = generateCouponCode();
-                        result.innerHTML += `<br><span style="font-size: 18px; color: #333;">Your coupon code: <strong>${couponCode}</strong></span>`;
+                        result.textContent = `Congratulations! You won: ${currentPrize}`;
+                        result.innerHTML += `<br><span style="font-size: 18px; color: #333;">Your coupon code: <strong>${currentCouponCode}</strong></span>`;
+                        
+                        // Show avail prize button
+                        availPrizeButton.style.display = "inline-block";
+                        
+                        // Set href with prize and coupon code as parameters
+                        availPrizeButton.href = `spinwheelconfirmation.php?prize=${encodeURIComponent(currentPrize)}&coupon=${encodeURIComponent(currentCouponCode)}`;
                         
                         // Trigger confetti celebration for winners
                         triggerConfetti();
