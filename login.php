@@ -90,6 +90,7 @@ if($_SERVER['REQUEST_METHOD']=='POST')
                         <a href="events.html" class="nav-item nav-link">Events</a>
                         <a href="menu.php" class="nav-item nav-link">Menu</a>
                         <a href="booking.html" class="nav-item nav-link">Booking</a>
+<a href="gallery.html" class="nav-item nav-link">Gallery</a>
                         <a href="team.html" class="nav-item nav-link">Our Team</a>
                         <a href="testimonial.html" class="nav-item nav-link">Testimonial</a>
                         <a href="contact.html" class="nav-item nav-link">Contact</a>
